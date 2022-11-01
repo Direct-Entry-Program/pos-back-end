@@ -48,6 +48,7 @@ public class CustomerServlet extends HttpServlet2 {
         resp.getWriter().println("<h1>doDelete..</h1>");
     }
 
+
     public void loadAllCustomers(HttpServletResponse response) throws IOException{
 
         try {
