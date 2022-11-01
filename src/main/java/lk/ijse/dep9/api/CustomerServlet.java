@@ -44,13 +44,13 @@ public class CustomerServlet extends HttpServlet2 {
 
 
                 if (!req.getContentType().startsWith("application/json")) {
-                    throw new JsonbException("Invalid Json");
+                    throw new JsonbException("Invalid JSON");
                 }
                 CustomerDTO customer = JsonbBuilder.create().fromJson(req.getReader(), CustomerDTO.class);
 
                 if (customer.getName() == null || !customer.getName().matches("[A-Za-z ]+")) {
                     throw new JsonbException("Name is invalid or empty");
-                } else if (customer.getAddress() == null || !customer.getAddress().matches("[A-Za-z0-9;,./\\-]+")) {
+                } else if (customer.getAddress() == null || !customer.getAddress().matches("[A-Za-z\\d;,./\\-]+")) {
                     throw new JsonbException("Address is invalid or empty");
                 }
 
