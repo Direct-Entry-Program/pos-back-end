@@ -81,9 +81,32 @@ public class CustomerServlet extends HttpServlet2 {
 
     /*========================================================*/
 
-    private void getCustomerDetails(String memberID , HttpServletResponse response) throws IOException {
+    private void getCustomerDetails(String customerID , HttpServletResponse response) throws IOException {
+
+        try(Connection connection = pool.getConnection()){
+
+            PreparedStatement stm = connection.prepareStatement("SELECT * FROM member WHERE id=?");
+            stm.setString(1,customerID);
+
+            ResultSet rst = stm.executeQuery();
+
+            if (rst.next()){
+                String id = rst.getString("id");
+                String name = rst.getString("name");
+                String address = rst.getString("address");
+
+                response.setContentType("application/json");
+                JsonbBuilder.create().toJson(new CustomerDTO(id,name,address),response.getWriter());
+
+            }else {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND,"Not a registered customer");
+            }
 
 
+        } catch (SQLException e) {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"Can not load customers");
+        }
 
 
     }
