@@ -11,10 +11,7 @@ import lk.ijse.dep9.dto.CustomerDTO;
 
 import javax.sql.DataSource;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 
 @WebServlet(name = "customer-servlet", value = "/customers/*")
@@ -84,4 +81,15 @@ public class CustomerServlet extends HttpServlet2 {
         }
 
     }
+
+    private void searchPaginatedCustomers (String query , String size , String page , HttpServletResponse response){
+        try(Connection connection = pool.getConnection()){
+            PreparedStatement stm1 = connection.prepareStatement("SELECT COUNT(id) as count FROM Customer WHERE id LIKE ? OR name LIKE  ? OR address LIKE ?");
+            connection.prepareStatement("SELECT * FROM Customer WHERE id LIKE ? OR")
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
 }
