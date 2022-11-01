@@ -27,22 +27,22 @@ public class CustomerServlet extends HttpServlet2 {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws  IOException {
 //            loadAllCustomers(response);
-        resp.getWriter().println("<h1>doGet..</h1>");
+        resp.getWriter().println("<h1>Customer Servlet - doGet..</h1>");
     }
 
     @Override
     protected void doPatch(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.getWriter().println("<h1>doPatch..</h1>");
+        resp.getWriter().println("<h1>Customer Servlet - doPatch..</h1>");
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.getWriter().println("<h1>doPost..</h1>");
+        resp.getWriter().println("<h1>Customer Servlet - doPost..</h1>");
     }
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.getWriter().println("<h1>doDelete..</h1>");
+        resp.getWriter().println("<h1>Customer Servlet - doDelete..</h1>");
     }
 
     public void loadAllCustomers(HttpServletResponse response) throws IOException{
