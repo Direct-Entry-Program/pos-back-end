@@ -1,8 +1,10 @@
 package lk.ijse.dep9.api;
 
 import jakarta.annotation.Resource;
+import jakarta.json.JsonException;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
+import jakarta.json.bind.JsonbException;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -10,12 +12,11 @@ import lk.ijse.dep9.api.util.HttpServlet2;
 import lk.ijse.dep9.dto.CustomerDTO;
 
 import javax.sql.DataSource;
+import javax.swing.*;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.UUID;
 
 @WebServlet(name = "customer-servlet", value = "/customers/*")
 public class CustomerServlet extends HttpServlet2 {
@@ -37,7 +38,33 @@ public class CustomerServlet extends HttpServlet2 {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.getWriter().println("<h1>doPost..</h1>");
+        if (req.getPathInfo()==null || req.getPathInfo().equals("/")){
+            if (!req.getContentType().startsWith("application/json")){
+                throw new JsonbException("Invalid Json");
+            }
+            CustomerDTO customer = JsonbBuilder.create().fromJson(req.getReader(), CustomerDTO.class);
+
+            if (customer.getName() == null || !customer.getName().matches("[A-Za-z ]+")){
+                throw new JsonbException("Name is invalid or empty");
+            } else if (customer.getAddress() ==null || !customer.getAddress().matches("[A-Za-z0-9;,./\\-]+")) {
+                throw new JsonbException("Address is invalid or empty");
+            }
+
+            try(Connection connection = pool.getConnection()){
+                PreparedStatement stm = connection.prepareStatement("INSERT INTO Customer (id, name, address) VALUES (?,?,?)");
+
+                stm.setString(1,UUID.randomUUID().toString());
+                stm.setString(2,customer.getName());
+                stm.setString(3,customer.getAddress());
+
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+
+
+        }else {
+            resp.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED,"Not Implemented yet");
+        }
     }
 
     @Override
@@ -84,4 +111,8 @@ public class CustomerServlet extends HttpServlet2 {
         }
 
     }
+
+
+
+
 }
