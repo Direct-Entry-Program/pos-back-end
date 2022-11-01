@@ -46,7 +46,6 @@ public class ItemServlet extends HttpServlet2 {
             stm.setString(1, itemCode);
 
             ResultSet rst = stm.executeQuery();
-
             if (rst.next()){
                 String code = rst.getString("code");
                 int stock = rst.getInt("stock");
