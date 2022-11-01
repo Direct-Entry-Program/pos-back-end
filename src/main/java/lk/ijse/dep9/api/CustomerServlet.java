@@ -24,7 +24,13 @@ public class CustomerServlet extends HttpServlet2 {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws  IOException {
 //            loadAllCustomers(response);
-        resp.getWriter().println("<h1>doGet..</h1>");
+
+        String query = req.getParameter("q");
+        String size = req.getParameter("size");
+        String page = req.getParameter("page");
+
+        searchPaginatedCustomers(query,Integer.parseInt(size),Integer.parseInt(page),resp);
+
     }
 
     @Override
