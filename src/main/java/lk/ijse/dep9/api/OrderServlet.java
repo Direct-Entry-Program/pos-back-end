@@ -97,6 +97,6 @@ public class OrderServlet extends HttpServlet2 {
     }
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.getWriter().println("<h1>Order Servlet - doPost..</h1>");
+        resp.getWriter().println("<h1>Order Servlet - doPost...</h1>");
     }
 }
