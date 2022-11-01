@@ -56,6 +56,7 @@ public class CustomerServlet extends HttpServlet2 {
         }
     }
 
+
     public void loadAllCustomers(HttpServletResponse response) throws IOException{
 
         try {
