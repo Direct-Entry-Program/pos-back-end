@@ -11,10 +11,7 @@ import lk.ijse.dep9.dto.CustomerDTO;
 
 import javax.sql.DataSource;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 
 @WebServlet(name = "customer-servlet", value = "/customers/*")
@@ -75,13 +72,19 @@ public class CustomerServlet extends HttpServlet2 {
             response.setContentType("application/json");
             jsonb.toJson(customers,response.getWriter());
 
-
-
-
         } catch (SQLException e) {
             e.printStackTrace();
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"Failed to load customers");
         }
+
+    }
+
+    /*========================================================*/
+
+    private void getCustomerDetails(String memberID , HttpServletResponse response) throws IOException {
+
+
+
 
     }
 }
