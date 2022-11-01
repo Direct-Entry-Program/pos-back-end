@@ -31,6 +31,7 @@ public class ItemServlet extends HttpServlet2 {
             getItemDetails(matcher.group(1),resp);
 
         }else {
+
             resp.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED,"Expected valid UUID");
         }
     }
