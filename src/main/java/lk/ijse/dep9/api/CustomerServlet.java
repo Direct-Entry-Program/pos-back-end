@@ -45,7 +45,15 @@ public class CustomerServlet extends HttpServlet2 {
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.getWriter().println("<h1>doDelete..</h1>");
+        if (req.getPathInfo() == null || req.getPathInfo().equals("/")){
+            resp.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED,"Not implemented yet");
+        }else {
+            if (req.getPathInfo().matches("^/([A-Fa-f0-9]{8}(-[A-Fa-f0-9]{4}){3}-[A-Fa-f0-9]{12})/?$")){
+                deleteCustomer(req.getPathInfo(),resp);
+            }else {
+                resp.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED,"Expected valid UUID");
+            }
+        }
     }
 
     public void loadAllCustomers(HttpServletResponse response) throws IOException{
@@ -129,7 +137,24 @@ public class CustomerServlet extends HttpServlet2 {
     }
 
 
-    private void deleteCustomer (String memberID , HttpServletResponse response){
+    private void deleteCustomer (String memberID , HttpServletResponse response) throws IOException {
+        try(Connection connection = pool.getConnection()){
+            PreparedStatement stm = connection.prepareStatement("DELETE FROM Customer WHERE id= ?");
+            stm.setString(1,memberID);
+            int deletedCustomers = stm.executeUpdate();
+
+            if (deletedCustomers == 0){
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST,"Invalid member ID");
+            }else {
+
+                response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"Can not load db , please try again");
+        }
+
 
     }
 
