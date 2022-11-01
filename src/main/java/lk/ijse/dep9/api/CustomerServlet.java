@@ -1,8 +1,10 @@
 package lk.ijse.dep9.api;
 
 import jakarta.annotation.Resource;
+import jakarta.json.JsonException;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
+import jakarta.json.bind.JsonbException;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -10,9 +12,11 @@ import lk.ijse.dep9.api.util.HttpServlet2;
 import lk.ijse.dep9.dto.CustomerDTO;
 
 import javax.sql.DataSource;
+import javax.swing.*;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.UUID;
 
 @WebServlet(name = "customer-servlet", value = "/customers/*")
 public class CustomerServlet extends HttpServlet2 {
@@ -40,7 +44,51 @@ public class CustomerServlet extends HttpServlet2 {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.getWriter().println("<h1>doPost..</h1>");
+        if (req.getPathInfo()==null || req.getPathInfo().equals("/")){
+
+            try {
+
+
+                if (!req.getContentType().startsWith("application/json")) {
+                    throw new JsonbException("Invalid JSON");
+                }
+                CustomerDTO customer = JsonbBuilder.create().fromJson(req.getReader(), CustomerDTO.class);
+
+                if (customer.getName() == null || !customer.getName().matches("[A-Za-z ]+")) {
+                    throw new JsonbException("Name is invalid or empty");
+                } else if (customer.getAddress() == null || !customer.getAddress().matches("[A-Za-z\\d;,./\\-]+")) {
+                    throw new JsonbException("Address is invalid or empty");
+                }
+
+                try (Connection connection = pool.getConnection()) {
+                    PreparedStatement stm = connection.prepareStatement("INSERT INTO Customer (id, name, address) VALUES (?,?,?)");
+
+                    stm.setString(1, UUID.randomUUID().toString());
+                    stm.setString(2, customer.getName());
+                    stm.setString(3, customer.getAddress());
+
+                    int updated = stm.executeUpdate();
+
+                    if (updated == 1) {
+                        resp.setStatus(HttpServletResponse.SC_CREATED);
+                        resp.setContentType("application/json");
+                        JsonbBuilder.create().toJson(customer, resp.getWriter());
+                    } else {
+                        throw new SQLException("Not updated, Something went wrong");
+                    }
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Can not load db , try again");
+                }
+            }catch (JsonbException e){
+                e.printStackTrace();
+                resp.sendError(HttpServletResponse.SC_BAD_REQUEST,"Invalid input");
+            }
+
+        }else {
+            resp.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED,"Not Implemented yet");
+        }
     }
 
     @Override
@@ -55,7 +103,6 @@ public class CustomerServlet extends HttpServlet2 {
             }
         }
     }
-
 
     public void loadAllCustomers(HttpServletResponse response) throws IOException{
 
@@ -106,7 +153,7 @@ public class CustomerServlet extends HttpServlet2 {
             for (int i = 1; i < 4; i++) {
                 stm1.setString(i,query);
                 stm2.setString(i,query);
-                
+
             }
             stm2.setInt(4,size);
             stm2.setInt(5,(page-1)*size);
