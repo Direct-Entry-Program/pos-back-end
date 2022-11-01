@@ -129,4 +129,9 @@ public class CustomerServlet extends HttpServlet2 {
     }
 
 
+    private void deleteCustomer (String memberID , HttpServletResponse response){
+
+    }
+
+
 }
