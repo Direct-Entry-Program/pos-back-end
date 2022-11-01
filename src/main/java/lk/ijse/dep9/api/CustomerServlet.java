@@ -49,7 +49,7 @@ public class CustomerServlet extends HttpServlet2 {
             resp.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED,"Not implemented yet");
         }else {
             if (req.getPathInfo().matches("^/([A-Fa-f0-9]{8}(-[A-Fa-f0-9]{4}){3}-[A-Fa-f0-9]{12})/?$")){
-                deleteCustomer(req.getPathInfo(),resp);
+                deleteCustomer(req.getPathInfo().replace("/",""),resp);
             }else {
                 resp.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED,"Expected valid UUID");
             }
