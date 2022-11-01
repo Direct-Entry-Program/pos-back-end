@@ -14,6 +14,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @WebServlet(name = "item-servlet", value = "/items/*")
 public class ItemServlet extends HttpServlet2 {
@@ -22,7 +24,15 @@ public class ItemServlet extends HttpServlet2 {
     private DataSource pool;
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.getWriter().println("<h1>Item Servlet - doGet..</h1>");
+//        resp.getWriter().println("<h1>Item Servlet - doGet..</h1>");
+
+        Matcher matcher = Pattern.compile("^/([A-Fa-f0-9]{8}(-[A-Fa-f0-9]{4}){3}-[A-Fa-f0-9]{12})/?$").matcher(req.getPathInfo());
+        if (matcher.matches()){
+            getItemDetails(matcher.group(1),resp);
+
+        }else {
+            resp.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED,"Expected valid UUID");
+        }
     }
 
     @Override
