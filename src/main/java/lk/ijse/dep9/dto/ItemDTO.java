@@ -7,7 +7,7 @@ public class ItemDTO {
     private double unit_price;
     private String description;
 
-    public ItemDTO(String code, String stock, String unit_price, String description) {
+    public ItemDTO() {
     }
 
     public ItemDTO(String code, int stock, double unit_price, String description) {
