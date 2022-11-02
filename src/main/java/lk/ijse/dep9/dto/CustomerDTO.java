@@ -9,6 +9,7 @@ public class CustomerDTO implements Serializable {
     private String address;
 
     public CustomerDTO() {
+
     }
 
     public CustomerDTO(String id, String name, String address) {

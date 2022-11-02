@@ -4,16 +4,16 @@ public class ItemDTO {
 
     private String code;
     private int stock;
-    private double unit_price;
+    private double unitPrice;
     private String description;
 
     public ItemDTO() {
     }
 
-    public ItemDTO(String code, int stock, double unit_price, String description) {
+    public ItemDTO(String code, int stock, double unitPrice, String description) {
         this.code = code;
         this.stock = stock;
-        this.unit_price = unit_price;
+        this.unitPrice = unitPrice;
         this.description = description;
     }
 
@@ -33,12 +33,12 @@ public class ItemDTO {
         this.stock = stock;
     }
 
-    public double getUnit_price() {
-        return unit_price;
+    public double getUnitPrice() {
+        return unitPrice;
     }
 
-    public void setUnit_price(double unit_price) {
-        this.unit_price = unit_price;
+    public void setUnitPrice(double unitPrice) {
+        this.unitPrice = unitPrice;
     }
 
     public String getDescription() {
@@ -54,7 +54,7 @@ public class ItemDTO {
         return "ItemDTO{" +
                 "code='" + code + '\'' +
                 ", stock=" + stock +
-                ", unit_price=" + unit_price +
+                ", unitPrice=" + unitPrice +
                 ", description='" + description + '\'' +
                 '}';
     }
